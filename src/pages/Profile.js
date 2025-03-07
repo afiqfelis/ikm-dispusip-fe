@@ -1,8 +1,19 @@
 import React, { useState } from "react";
+import { motion } from "framer-motion"; // Import dari framer-motion
 import MenuComponent from "../components/MenuComponent";
 
 const Profile = () => {
   const [activeMenu, setActiveMenu] = useState("profile"); // State untuk melacak menu aktif
+
+  // Variants untuk animasi container
+  const containerVariants = {
+    hidden: { opacity: 0, y: 50 }, // Awal: transparan dan sedikit ke bawah
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: { duration: 0.8, ease: "easeOut" }, // Transisi: durasi 0.8 detik
+    },
+  };
 
   return (
     <div style={styles.container}>
@@ -13,10 +24,15 @@ const Profile = () => {
       <MenuComponent activeMenu={activeMenu} setActiveMenu={setActiveMenu} />
 
       {/* Konten */}
-      <div style={styles.content}>
+      <motion.div
+        style={styles.content}
+        variants={containerVariants} // Variants untuk animasi
+        initial="hidden" // Keadaan awal
+        animate="visible" // Keadaan akhir (setelah animasi)
+      >
         <h2>Profile</h2>
         <p>Ini adalah halaman profile Anda.</p>
-      </div>
+      </motion.div>
     </div>
   );
 };

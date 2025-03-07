@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom"; // Impor useNavigate
 
 const LoginNavbar = () => {
   const [isOpen, setIsOpen] = useState(false); // State untuk mengontrol dropdown
+  const [isScrolled, setIsScrolled] = useState(false); // State untuk melacak scroll
   const navigate = useNavigate(); // Hook untuk navigasi
 
   // Fungsi untuk toggle dropdown
@@ -10,50 +11,98 @@ const LoginNavbar = () => {
     setIsOpen(!isOpen);
   };
 
-useEffect(() => {
-  const handleClickOutside = (event) => {
-    console.log("Clicked outside:", event.target);
-    const dropdownContainer = document.querySelector(".dropdown-container");
-    const homeButton = document.querySelector(".home-button");
+  // Effect untuk mendeteksi scroll
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 50) {
+        setIsScrolled(true); // Ubah state jika scroll lebih dari 50px
+      } else {
+        setIsScrolled(false); // Kembalikan ke state awal jika scroll di bawah 50px
+      }
+    };
 
-    if (
-      dropdownContainer &&
-      !dropdownContainer.contains(event.target) && // Klik di luar dropdown
-      (!homeButton || !homeButton.contains(event.target)) // Klik bukan pada tombol Home
-    ) {
-      console.log("Closing dropdown...");
-      setIsOpen(false); // Tutup dropdown
-    }
-  };
+    // Tambahkan event listener untuk scroll
+    window.addEventListener("scroll", handleScroll);
 
-  // Tambahkan event listener saat komponen dimuat
-  document.addEventListener("mousedown", handleClickOutside);
+    // Bersihkan event listener saat komponen dibongkar
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
 
-  // Bersihkan event listener saat komponen dibongkar
-  return () => {
-    document.removeEventListener("mousedown", handleClickOutside);
-  };
-}, []);
+  // Effect untuk menutup dropdown jika diklik di luar
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      const dropdownContainer = document.querySelector(".dropdown-container");
+      const homeButton = document.querySelector(".home-button");
+
+      if (
+        dropdownContainer &&
+        !dropdownContainer.contains(event.target) && // Klik di luar dropdown
+        (!homeButton || !homeButton.contains(event.target)) // Klik bukan pada tombol Home
+      ) {
+        setIsOpen(false); // Tutup dropdown
+      }
+    };
+
+    // Tambahkan event listener saat komponen dimuat
+    document.addEventListener("mousedown", handleClickOutside);
+
+    // Bersihkan event listener saat komponen dibongkar
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
   return (
-    <nav style={styles.loginNavbar}>
+    <nav
+      style={{
+        ...styles.loginNavbar,
+        backgroundColor: isScrolled ? "#fff" : "#2c3e50", // Ubah warna latar belakang saat scroll
+        color: isScrolled ? "#2c3e50" : "#fff", // Ubah warna teks saat scroll
+        boxShadow: isScrolled ? "0 4px 6px rgba(0, 0, 0, 0.1)" : "none", // Tambahkan shadow saat scroll
+      }}
+    >
       {/* Judul Navbar */}
-      <h2 style={styles.title}>DISPUSIP</h2>
+      <h2
+        style={{
+          ...styles.title,
+          color: isScrolled ? "#2c3e50" : "#fff", // Ubah warna teks judul saat scroll
+        }}
+      >
+        DISPUSIP
+      </h2>
 
       {/* Dropdown Menu */}
       <div className="dropdown-container" style={styles.dropdownContainer}>
-        <button style={styles.dropdownButton} onClick={toggleDropdown}>
+        <button
+          style={{
+            ...styles.dropdownButton,
+            color: isScrolled ? "#2c3e50" : "#ecf0f1", // Ubah warna teks tombol saat scroll
+          }}
+          onClick={toggleDropdown}
+        >
           Menu
           <span style={styles.arrowIcon}>{isOpen ? "▲" : "▼"}</span>
         </button>
 
         {/* Dropdown Items */}
         {isOpen && (
-          <ul style={styles.dropdownMenu}>
+          <ul
+            style={{
+              ...styles.dropdownMenu,
+              backgroundColor: isScrolled ? "#fff" : "#34495e", // Ubah warna latar dropdown saat scroll
+              color: isScrolled ? "#2c3e50" : "#fff", // Ubah warna teks dropdown saat scroll
+            }}
+          >
             {/* Sub-menu Home */}
             <li style={styles.dropdownItem}>
               <button
                 className="dropdown-item-button home-button"
-                style={styles.dropdownItemButton}
+                style={{
+                  ...styles.dropdownItemButton,
+                  color: isScrolled ? "#2c3e50" : "#ecf0f1", // Ubah warna teks item dropdown saat scroll
+                }}
                 onClick={(event) => {
                   event.stopPropagation();
                   navigate("/home-profile");
@@ -66,7 +115,10 @@ useEffect(() => {
             <li style={styles.dropdownItem}>
               <button
                 className="dropdown-item-button"
-                style={styles.dropdownItemButton}
+                style={{
+                  ...styles.dropdownItemButton,
+                  color: isScrolled ? "#2c3e50" : "#ecf0f1", // Ubah warna teks item dropdown saat scroll
+                }}
                 onClick={(event) => {
                   event.stopPropagation();
                   navigate("/login");
@@ -98,10 +150,12 @@ const styles = {
     zIndex: 1000,
     margin: 0,
     fontSize: "20px", // Ukuran font lebih besar
+    transition: "background-color 0.3s, color 0.3s, box-shadow 0.3s", // Animasi perubahan warna dan shadow
   },
   title: {
     fontSize: "20px",
     fontWeight: "bold",
+    transition: "color 0.3s", // Animasi perubahan warna
   },
   dropdownContainer: {
     position: "relative",
@@ -116,7 +170,7 @@ const styles = {
     fontSize: "16px",
     padding: "8px 22px",
     borderRadius: "4px",
-    transition: "background-color 0.3s",
+    transition: "background-color 0.3s, color 0.3s", // Animasi perubahan warna
   },
   arrowIcon: {
     marginLeft: "8px",
@@ -135,6 +189,7 @@ const styles = {
     boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
     minWidth: "100px",
     zIndex: 1001,
+    transition: "background-color 0.3s, color 0.3s", // Animasi perubahan warna
   },
   dropdownItem: {
     padding: "8px 16px",
@@ -149,7 +204,7 @@ const styles = {
     cursor: "pointer",
     fontSize: "14px",
     padding: "8px 0",
-    transition: "background-color 0.3s",
+    transition: "background-color 0.3s, color 0.3s", // Animasi perubahan warna
   },
 };
 

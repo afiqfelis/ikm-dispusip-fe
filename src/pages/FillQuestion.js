@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom"; // Import useNavigate
+import { motion } from "framer-motion"; // Import dari framer-motion
 import MenuComponent from "../components/MenuComponent";
 
 const FillQuestion = () => {
@@ -82,16 +83,31 @@ const FillQuestion = () => {
   // Memeriksa apakah semua field telah diisi
   const isFormComplete = Object.values(formData).every((value) => value !== "");
 
+  // Variants untuk animasi container
+  const containerVariants = {
+    hidden: { opacity: 0, y: 50 }, // Awal: transparan dan sedikit ke bawah
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: { duration: 0.8, ease: "easeOut" }, // Transisi: durasi 0.8 detik
+    },
+  };
+
   return (
     <div style={styles.container}>
       {/* Header */}
       <h1 style={styles.title}>Halaman Isi Kuisoner</h1>
 
       {/* Menu */}
-      {<MenuComponent activeMenu={activeMenu} setActiveMenu={setActiveMenu} />}
+      <MenuComponent activeMenu={activeMenu} setActiveMenu={setActiveMenu} />
 
       {/* Konten */}
-      <div style={styles.content}>
+      <motion.div
+        style={styles.content}
+        variants={containerVariants} // Variants untuk animasi
+        initial="hidden" // Keadaan awal
+        animate="visible" // Keadaan akhir (setelah animasi)
+      >
         <h2>Isi Kuisoner</h2>
         <p>Silakan isi kuisoner untuk memberikan feedback.</p>
 
@@ -175,7 +191,7 @@ const FillQuestion = () => {
             Submit
           </button>
         </form>
-      </div>
+      </motion.div>
     </div>
   );
 };
