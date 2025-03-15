@@ -1,6 +1,10 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion"; // Import dari framer-motion
 import MenuComponent from "../components/MenuComponent"; // Impor MenuComponent
+// Import Font Awesome Icons
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faGlobe, faInfoCircle } from "@fortawesome/free-solid-svg-icons";
+import { faInstagram } from "@fortawesome/free-brands-svg-icons";
 
 const HomeProfile = () => {
   const [activeMenu, setActiveMenu] = useState("home"); // State untuk melacak menu aktif
@@ -32,25 +36,53 @@ const HomeProfile = () => {
       >
         {activeMenu === "home" && (
           <div>
-            {/* Kata Sambutan */}
-            <p style={styles.paragraph}>
-              Kami dengan hormat menyampaikan apresiasi kepada seluruh pengunjung atas kunjungan Anda di website resmi kami. Website ini dirancang untuk menampung aspirasi, masukan, serta penilaian kepuasan masyarakat terhadap layanan yang
-              kami berikan. Melalui platform ini, kami berharap dapat meningkatkan kualitas pelayanan publik di bidang perpustakaan dan kearsipan demi mendukung visi Kota Pekanbaru sebagai Smart City Madani.
-            </p>
+            {/* Teks Pengenalan IKM Survey */}
+            <div style={styles.surveySection}>
+              <h2 style={styles.subtitle}>Selamat Datang di Platform IKM Survey</h2>
+              <p style={styles.surveyText}>Halo, Sahabat Literasi!</p>
+              <p style={styles.surveyText}>
+                Selamat datang di <strong>IKM Survey</strong>, platform resmi milik <strong>Dinas Perpustakaan dan Kearsipan (DISPUSIP) Kota Pekanbaru</strong>. Kami dengan bangga mempersembahkan wadah ini sebagai sarana untuk mendengarkan
+                suara Anda, masyarakat, dalam menilai kualitas layanan kami.
+              </p>
+              <p style={styles.surveyText}>
+                <strong>Apa itu IKM Survey?</strong>
+                IKM Survey adalah survei Indeks Kepuasan Masyarakat yang bertujuan untuk mengukur tingkat kepuasan Anda terhadap layanan yang kami sediakan. Melalui survei ini, kami berharap dapat mengumpulkan masukan berharga dari Anda
+                untuk terus meningkatkan pelayanan publik di bidang perpustakaan dan kearsipan.
+              </p>
+              <p style={styles.surveyText}>
+                <strong>Mengapa Partisipasi Anda Penting?</strong>
+                Setiap pendapat dan saran dari Anda sangat berarti bagi kami. Dengan meluangkan waktu beberapa menit untuk mengisi survei ini, Anda turut berkontribusi dalam mewujudkan layanan yang lebih baik, lebih cepat, dan lebih nyaman
+                bagi seluruh masyarakat Kota Pekanbaru.
+              </p>
+              <p style={styles.surveyText}>
+                <strong>Bagaimana Cara Mengisi Survei?</strong>
+              </p>
+              <ol style={styles.surveyList}>
+                <li>Pilih menu "Isi Kuisioner" di atas.</li>
+                <li>Jawab pertanyaan-pertanyaan yang diberikan sesuai dengan pengalaman Anda.</li>
+                <li>Kirimkan jawaban Anda, dan selesai!</li>
+              </ol>
+              <p style={styles.surveyText}>Jangan khawatir, semua data yang Anda berikan akan dijaga kerahasiaannya dan hanya digunakan untuk keperluan peningkatan layanan.</p>
+              <p style={styles.surveyText}>
+                <strong>Yuk, Bersama Kita Wujudkan Layanan Publik yang Lebih Baik!</strong>
+                Mari bersama-sama mendukung transformasi digital DISPUSIP Kota Pekanbaru menuju <strong>Smart City Madani</strong>. Setiap suara Anda adalah langkah penting bagi kemajuan literasi, arsip, dan informasi di Kota Pekanbaru.
+              </p>
+              <p style={styles.surveyText}>Terima kasih atas partisipasi Anda. Mari kita bangun masa depan yang lebih cerdas, inklusif, dan berkelanjutan!</p>
+            </div>
           </div>
         )}
       </motion.div>
 
       {/* 3 Box Container */}
       <div style={styles.boxContainer}>
-        {/* Box 1 */}
-        <BoxWithHover icon="📚" text="Platform Survey #1 untuk Mahasiswa Indonesia" link="https://example.com/survey" linkText="Gabung Komunitas Kudata" />
+        {/* Box 1: Website Resmi */}
+        <BoxWithHover icon={<FontAwesomeIcon icon={faGlobe} />} text="Kunjungi Website Resmi" link="https://dispusip.pekanbaru.go.id/" linkText="Website Resmi" />
 
-        {/* Box 2 */}
-        <BoxWithHover icon="👥" text="Temukan topik survey yang menarik bagimu" link="https://example.com/community" linkText="Follow Instagram Kudata" />
+        {/* Box 2: Instagram */}
+        <BoxWithHover icon={<FontAwesomeIcon icon={faInstagram} />} text="Follow Instagram Kami" link="https://www.instagram.com/dispusippku/" linkText="Instagram" />
 
-        {/* Box 3 */}
-        <BoxWithHover icon="🎁" text="Dapatkan hadiah yang pasti hanya pada platform Kudata!" link="https://example.com/rewards" linkText="Pelajari Lebih Lanjut" />
+        {/* Box 3: Tentang Kami */}
+        <BoxWithHover icon={<FontAwesomeIcon icon={faInfoCircle} />} text="Pelajari Lebih Lanjut Tentang Kami" link="https://example.com/about" linkText="Tentang Kami" />
       </div>
     </div>
   );
@@ -109,6 +141,27 @@ const styles = {
     lineHeight: "1.6",
     color: "#555",
     marginBottom: "20px",
+  },
+  surveySection: {
+    marginTop: "40px",
+  },
+  subtitle: {
+    fontSize: "18px",
+    fontWeight: "bold",
+    color: "#333",
+    marginBottom: "10px",
+  },
+  surveyText: {
+    fontSize: "16px",
+    lineHeight: "1.6",
+    color: "#555",
+    marginBottom: "10px",
+  },
+  surveyList: {
+    paddingLeft: "20px",
+    fontSize: "16px",
+    lineHeight: "1.6",
+    color: "#555",
   },
   boxContainer: {
     display: "flex",
