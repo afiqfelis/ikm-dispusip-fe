@@ -1,7 +1,7 @@
 {
   "name": "ikm-dispusip",
   "version": "0.1.0",
-  "homepage": "/home-profile",
+  "homepage": "https://ikm.perpustakaanterbaik.com",
   "private": true,
   "dependencies": {
     "@fortawesome/free-brands-svg-icons": "^6.7.2",
