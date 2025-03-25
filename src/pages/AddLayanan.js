@@ -4,73 +4,86 @@ import { useNavigate } from "react-router-dom";
 const AddServiceUnit = () => {
   const [formData, setFormData] = useState({
     nama_unit: "",
-    inputpassword: "",
+    password: "", // Sesuaikan dengan backend
   });
   const [error, setError] = useState("");
   const [serviceUnits, setServiceUnits] = useState([]);
   const navigate = useNavigate();
   const token = localStorage.getItem("token");
-  const adminPassword = "admin";
 
-  // Ambil data unit layanan dari backend
+  // Ambil data unit dari backend
   useEffect(() => {
     fetch("http://localhost:8000/api/unit", {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
+      headers: { Authorization: `Bearer ${token}` },
     })
-      .then((res) => res.json())
+      .then((res) => {
+        if (!res.ok) throw new Error("Gagal mengambil data unit");
+        return res.json();
+      })
       .then((data) => setServiceUnits(data))
-      .catch((error) => console.error("Error fetching units:", error));
+      .catch((error) => {
+        console.error("Error fetching units:", error);
+        setError("Gagal memuat data unit. Cek koneksi atau token.");
+      });
   }, [token]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prevData) => ({
-      ...prevData,
-      [name]: value,
-    }));
+    setFormData({ ...formData, [name]: value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!formData.nama_unit || !formData.inputpassword) {
-      setError("Semua kolom wajib diisi.");
-      return;
-    }
-    if (formData.inputpassword !== adminPassword) {
-      setError("Password salah. Silakan masukkan password admin yang benar.");
-      return;
-    }
     setError("");
-    const payload = { nama_unit: formData.nama_unit };
 
-    fetch("http://localhost:8000/api/unit/store", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify(payload),
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        setServiceUnits((prevUnits) => [...prevUnits, data]);
-        alert("Unit layanan berhasil ditambahkan!");
-        navigate("/dashboard");
-        setFormData({
-          nama_unit: "",
-        });
-      })
-      .catch((error) => {
-        console.error("Error posting unit:", error);
-        setError("Terjadi kesalahan saat menambahkan unit layanan.");
+    try {
+      const response = await fetch("http://localhost:8000/api/unit/store", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(formData), // Kirim password ke backend
       });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Gagal menyimpan unit");
+      }
+
+      const newUnit = await response.json();
+      setServiceUnits([...serviceUnits, newUnit]);
+      setFormData({ nama_unit: "", password: "" });
+      alert("Unit layanan berhasil ditambahkan!");
+      navigate("/add-service-unit");
+    } catch (error) {
+      setError(error.message);
+      console.error("Error:", error);
+    }
   };
 
-  const handleDelete = (id) => {
-    setServiceUnits((prevUnits) => prevUnits.filter((unit) => unit.id !== id));
-    alert("Unit layanan berhasil dihapus!");
+  const handleDelete = async (id_unit) => {
+    try {
+      const response = await fetch(`http://localhost:8000/api/unit/delete/${id_unit}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ password: formData.password }), // Kirim password untuk validasi
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Gagal menghapus unit");
+      }
+
+      setServiceUnits(serviceUnits.filter((unit) => unit.id_unit !== id_unit));
+      alert("Unit layanan berhasil dihapus!");
+    } catch (error) {
+      setError(error.message);
+      console.error("Error:", error);
+    }
   };
 
   return (
@@ -81,11 +94,11 @@ const AddServiceUnit = () => {
         <form onSubmit={handleSubmit} style={styles.form}>
           <div style={styles.horizontalFormGroup}>
             <label style={styles.horizontalLabel}>Nama Layanan:</label>
-            <input type="text" name="serviceName" value={formData.serviceName} onChange={handleChange} required style={styles.horizontalInput} />
+            <input type="text" name="nama_unit" value={formData.nama_unit} onChange={handleChange} required style={styles.horizontalInput} />
           </div>
           <div style={styles.horizontalFormGroup}>
-            <label style={styles.horizontalLabel}>Password:</label>
-            <input type="password" name="inputpassword" value={formData.inputpassword} onChange={handleChange} required style={styles.horizontalInput} />
+            <label style={styles.horizontalLabel}>Password Admin:</label>
+            <input type="password" name="password" value={formData.password} onChange={handleChange} required style={styles.horizontalInput} />
           </div>
           <div style={styles.buttonContainer}>
             <button type="submit" style={styles.submitButton}>
@@ -106,28 +119,17 @@ const AddServiceUnit = () => {
             </tr>
           </thead>
           <tbody>
-            {serviceUnits.length > 0 ? (
-              serviceUnits.map((unit, index) => (
-                <tr key={unit.id}>
-                  <td style={styles.td}>{index + 1}</td>
-                  <td style={styles.td}>{unit.nama_unit}</td>
-                  <td style={styles.td}>
-                    <button style={styles.actionButtonEdit} onClick={() => alert(`Edit unit layanan: ${unit.serviceName}`)}>
-                      Edit
-                    </button>
-                    <button style={styles.actionButtonDelete} onClick={() => handleDelete(unit.id)}>
-                      Hapus
-                    </button>
-                  </td>
-                </tr>
-              ))
-            ) : (
-              <tr>
-                <td colSpan="3" style={styles.noData}>
-                  Tidak ada data unit layanan.
+            {serviceUnits.map((unit, index) => (
+              <tr key={unit.id_unit}>
+                <td style={styles.td}>{index + 1}</td>
+                <td style={styles.td}>{unit.nama_unit}</td>
+                <td style={styles.td}>
+                  <button style={styles.actionButtonDelete} onClick={() => handleDelete(unit.id_unit)}>
+                    Hapus
+                  </button>
                 </td>
               </tr>
-            )}
+            ))}
           </tbody>
         </table>
       </div>
