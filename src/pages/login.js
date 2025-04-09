@@ -12,7 +12,7 @@ const Login = ({ onLogin }) => {
   const handleLogin = async () => {
     try {
       // Kirim permintaan POST ke API login
-      const response = await axios.post("http://127.0.0.1:8000/api/login", {
+      const response = await axios.post("https://ikm.perpustakaanterbaik.com/api/login", {
         email: email, // Ganti 'username' menjadi 'email' sesuai API
         password: password,
       });
