@@ -13,7 +13,7 @@ const AddServiceUnit = () => {
 
   // Ambil data unit dari backend
   useEffect(() => {
-    fetch("https://ikm.perpustakaanterbaik.com/api/unit", {
+    fetch("https://ikmb.perpustakaanterbaik.com/api/unit", {
       headers: { Authorization: `Bearer ${token}` },
     })
       .then((res) => {
