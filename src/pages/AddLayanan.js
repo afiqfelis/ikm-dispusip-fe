@@ -37,7 +37,7 @@ const AddServiceUnit = () => {
     setError("");
 
     try {
-      const response = await fetch("http://localhost:8000/api/unit/store", {
+      const response = await fetch("https://ikmb.perpustakaanterbaik.com/api/unit/store", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -64,7 +64,7 @@ const AddServiceUnit = () => {
 
   const handleDelete = async (id_unit) => {
     try {
-      const response = await fetch(`http://localhost:8000/api/unit/delete/${id_unit}`, {
+      const response = await fetch(`https://ikmb.perpustakaanterbaik.com/api/unit/delete/${id_unit}`, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",

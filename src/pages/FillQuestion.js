@@ -28,7 +28,7 @@ const FillQuestion = () => {
   // Fungsi untuk memuat data dari backend
   const fetchData = async () => {
     try {
-      const response = await fetch("http://localhost:8000/api/kuesioner");
+      const response = await fetch("https://ikmb.perpustakaanterbaik.com/api/kuesioner");
       if (!response.ok) {
         throw new Error("Gagal memuat data dari backend.");
       }
@@ -60,7 +60,7 @@ const FillQuestion = () => {
 
     try {
       // Kirim data ke backend
-      const response = await fetch("http://localhost:8000/api/kuesioner/store", {
+      const response = await fetch("https://ikmb.perpustakaanterbaik.com/api/kuesioner/store", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

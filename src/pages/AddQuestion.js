@@ -33,7 +33,7 @@ const AddQuestion = () => {
   }, [token]);
 
   useEffect(() => {
-    fetch("http://localhost:8000/api/pertanyaan", {
+    fetch("https://ikmb.perpustakaanterbaik.com/api/pertanyaan", {
       headers: { Authorization: `Bearer ${token}` },
     })
       .then((res) => {
@@ -59,7 +59,7 @@ const AddQuestion = () => {
     const isUpdate = !!questionData.id_pertanyaan;
 
     try {
-      const response = await fetch(isUpdate ? `http://localhost:8000/api/pertanyaan/update/${questionData.id_pertanyaan}` : "http://localhost:8000/api/pertanyaan/store", {
+      const response = await fetch(isUpdate ? `https://ikmb.perpustakaanterbaik.com/apipertanyaan/update/${questionData.id_pertanyaan}` : "https://ikmb.perpustakaanterbaik.com/api/pertanyaan/store", {
         method: isUpdate ? "PUT" : "POST",
         headers: {
           "Content-Type": "application/json",
@@ -85,14 +85,14 @@ const AddQuestion = () => {
       const finalQuestion = await response.json();
 
       if (isUpdate) {
-        await fetch(`http://localhost:8000/api/jawaban/delete-by-pertanyaan/${finalQuestion.id_pertanyaan}`, {
+        await fetch(`https://ikmb.perpustakaanterbaik.com/api/jawaban/delete-by-pertanyaan/${finalQuestion.id_pertanyaan}`, {
           method: "DELETE",
           headers: { Authorization: `Bearer ${token}` },
         });
       }
 
       const jawabanPromises = questionData.options.map((option, index) => {
-        return fetch("http://localhost:8000/api/jawaban/store", {
+        return fetch("https://ikmb.perpustakaanterbaik.com/api/jawaban/store", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -141,7 +141,7 @@ const AddQuestion = () => {
   // AddQuestion.js
   const handleDelete = async (id_pertanyaan) => {
     try {
-      const response = await fetch(`http://localhost:8000/api/pertanyaan/delete/${id_pertanyaan}`, {
+      const response = await fetch(`https://ikmb.perpustakaanterbaik.com/api/pertanyaan/delete/${id_pertanyaan}`, {
         method: "DELETE",
         headers: { Authorization: `Bearer ${token}` },
       });
